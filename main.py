@@ -1,4 +1,6 @@
 import json
+import os
+import sys
 import time
 import requests
 import base64
@@ -70,9 +72,22 @@ class Text2ImageAPI:
             time.sleep(delay)
         return None
 
+    import os
+    import base64
+
     def save_image(self, image_data, filename):
-        with open(filename, "wb") as f:
-            f.write(base64.b64decode(image_data))
+        script_dir = os.path.dirname(os.path.abspath(__file__))
+        directory = os.path.join(script_dir, "GENERATED IMAGES")
+        if not os.path.exists(directory):
+            os.makedirs(directory)
+        file_path = os.path.join(directory, filename)
+
+        try:
+            with open(file_path, "wb") as f:
+                f.write(base64.b64decode(image_data))
+            print(f"Файл сохранён как: {file_path}")
+        except Exception as e:
+            print(f"Ошибка при сохранении файла: {e}")
 
 
 def main():
@@ -88,14 +103,10 @@ def main():
     style_index = int(input("Введите номер стиля: ")) - 1
     style = api.STYLES[style_index]["name"]
 
-    # Ввод промптов
-    prompts = []
-    print("Введите промпты (оставьте строку пустой для завершения ввода):")
-    while True:
-        prompt = input("Промпт: ").strip()
-        if not prompt:
-            break
-        prompts.append(prompt)
+    print("Введите список промптов, разделенных ';':")
+    prompt_input = input().strip()
+    prompts = prompt_input.split(';')
+    prompts = [prompt.strip() for prompt in prompts]
 
     base_name = input("Введите базовое имя файлов для сохранения изображений: ")
 
