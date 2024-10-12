@@ -76,7 +76,9 @@ class Text2ImageAPI:
     import base64
 
     def save_image(self, image_data, filename):
-        script_dir = os.path.dirname(os.path.abspath(__file__))
+
+        #script_dir = os.path.dirname(os.path.abspath(__file__))
+        script_dir = os.path.dirname(os.path.abspath(sys.executable))
         directory = os.path.join(script_dir, "GENERATED IMAGES")
         if not os.path.exists(directory):
             os.makedirs(directory)
